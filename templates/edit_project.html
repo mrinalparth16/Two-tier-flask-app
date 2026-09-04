@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Edit {{ project.name }} &bull; DevOps Project Tracker{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-nav">
+    <a href="{{ url_for('view_project', project_id=project.id) }}">&larr; Back to Project Details</a>
+</div>
+
+<div class="form-container">
+    <div class="card form-card">
+        <div class="card-header">
+            <h1 class="card-title">Edit Project #{{ project.id }}</h1>
+            <p class="card-subtitle">Update project metadata, tech stack, or status.</p>
+        </div>
+
+        <form action="{{ url_for('edit_project', project_id=project.id) }}" method="POST" class="project-form">
+            <div class="form-group">
+                <label for="name" class="form-label">Project Name <span class="required">*</span></label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    class="form-control"
+                    placeholder="e.g. CI/CD Pipeline Automation"
+                    value="{{ project.name }}"
+                    maxlength="150"
+                    required
+                >
+                <small class="form-hint">A clear, descriptive name for the project (max 150 characters).</small>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-half">
+                    <label for="technology" class="form-label">Technology / Stack <span class="required">*</span></label>
+                    <input
+                        type="text"
+                        id="technology"
+                        name="technology"
+                        class="form-control"
+                        placeholder="e.g. Docker, Jenkins, AWS, Terraform"
+                        value="{{ project.technology }}"
+                        maxlength="255"
+                        required
+                    >
+                    <small class="form-hint">Key tools and platforms used (comma separated).</small>
+                </div>
+
+                <div class="form-group col-half">
+                    <label for="status" class="form-label">Project Status <span class="required">*</span></label>
+                    <select id="status" name="status" class="form-control" required>
+                        {% for opt in status_options %}
+                            <option value="{{ opt }}" {% if project.status == opt %}selected{% endif %}>{{ opt }}</option>
+                        {% endfor %}
+                    </select>
+                    <small class="form-hint">Current lifecycle stage of the project.</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description" class="form-label">Project Description</label>
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="4"
+                    class="form-control"
+                    placeholder="Describe the architecture goals, operational scope, or deployment strategy..."
+                >{{ project.description|default('') }}</textarea>
+                <small class="form-hint">Optional context or technical requirements.</small>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="{{ url_for('view_project', project_id=project.id) }}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

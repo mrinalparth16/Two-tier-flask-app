@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard &bull; DevOps Project Tracker{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Project Overview</h1>
+        <p class="page-subtitle">Track, manage, and monitor infrastructure and DevOps engineering initiatives.</p>
+    </div>
+    <div>
+        <a href="{{ url_for('add_project') }}" class="btn btn-primary">+ Create Project</a>
+    </div>
+</div>
+
+{% if db_error %}
+<div class="alert alert-danger" style="margin-bottom: 1.5rem;">
+    <span class="alert-icon">&#9888;</span>
+    <div class="alert-text">
+        <strong>Database Connection Failed:</strong> {{ db_error }}<br>
+        <small>Please ensure your MySQL service is running and environment variables (<code>DB_HOST</code>, <code>DB_USER</code>, <code>DB_PASSWORD</code>, <code>DB_NAME</code>) are properly configured.</small>
+    </div>
+</div>
+{% endif %}
+
+<!-- Statistics Cards -->
+<section class="metrics-grid">
+    <div class="card metric-card">
+        <div class="metric-label">Total Projects</div>
+        <div class="metric-value">{{ stats.total }}</div>
+        <div class="metric-footnote">All tracked initiatives</div>
+    </div>
+    <div class="card metric-card status-planning">
+        <div class="metric-label">Planning</div>
+        <div class="metric-value">{{ stats.planning }}</div>
+        <div class="metric-footnote">Roadmap &amp; architecture</div>
+    </div>
+    <div class="card metric-card status-inprogress">
+        <div class="metric-label">In Progress</div>
+        <div class="metric-value">{{ stats.in_progress }}</div>
+        <div class="metric-footnote">Active deployment &amp; testing</div>
+    </div>
+    <div class="card metric-card status-completed">
+        <div class="metric-label">Completed</div>
+        <div class="metric-value">{{ stats.completed }}</div>
+        <div class="metric-footnote">Shipped to production</div>
+    </div>
+</section>
+
+<!-- Filter & Table Card -->
+<section class="card data-card">
+    <div class="filter-bar">
+        <div class="filter-label">Filter by Status:</div>
+        <div class="filter-pills">
+            <a href="{{ url_for('index') }}" class="filter-pill {% if current_filter == 'All' or not current_filter %}active{% endif %}">
+                All ({{ stats.total }})
+            </a>
+            {% for opt in status_options %}
+                <a href="{{ url_for('index', status=opt) }}" class="filter-pill {% if current_filter == opt %}active{% endif %}">
+                    {{ opt }}
+                    {% if opt == 'Planning' %}({{ stats.planning }})
+                    {% elif opt == 'In Progress' %}({{ stats.in_progress }})
+                    {% elif opt == 'Completed' %}({{ stats.completed }})
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Projects Table -->
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 60px;">ID</th>
+                    <th>Project Name</th>
+                    <th>Tech Stack</th>
+                    <th style="width: 140px;">Status</th>
+                    <th style="width: 150px;">Created Date</th>
+                    <th style="width: 180px; text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if projects %}
+                    {% for project in projects %}
+                        <tr>
+                            <td class="cell-id">#{{ project.id }}</td>
+                            <td class="cell-name">
+                                <a href="{{ url_for('view_project', project_id=project.id) }}" class="project-title-link">
+                                    {{ project.name }}
+                                </a>
+                                {% if project.description %}
+                                    <div class="table-desc-preview">{{ project.description[:80] }}{% if project.description|length > 80 %}...{% endif %}</div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="tech-tag">{{ project.technology }}</span>
+                            </td>
+                            <td>
+                                {% if project.status == 'Planning' %}
+                                    <span class="badge badge-planning">Planning</span>
+                                {% elif project.status == 'In Progress' %}
+                                    <span class="badge badge-in-progress">In Progress</span>
+                                {% elif project.status == 'Completed' %}
+                                    <span class="badge badge-completed">Completed</span>
+                                {% else %}
+                                    <span class="badge">{{ project.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="cell-date">
+                                {{ project.created_at.strftime('%Y-%m-%d') if project.created_at else 'N/A' }}
+                            </td>
+                            <td class="cell-actions" style="text-align: right;">
+                                <a href="{{ url_for('view_project', project_id=project.id) }}" class="btn-action btn-view" title="View Project">View</a>
+                                <a href="{{ url_for('edit_project', project_id=project.id) }}" class="btn-action btn-edit" title="Edit Project">Edit</a>
+                                <form action="{{ url_for('delete_project', project_id=project.id) }}" method="POST" class="inline-form" onsubmit="return confirm('Are you sure you want to delete project \'{{ project.name }}\'? This action cannot be undone.');">
+                                    <button type="submit" class="btn-action btn-delete" title="Delete Project">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <div class="empty-icon">&#128194;</div>
+                            <div class="empty-title">No projects found</div>
+                            <p class="empty-text">
+                                {% if current_filter and current_filter != 'All' %}
+                                    There are currently no projects with the status <strong>{{ current_filter }}</strong>.
+                                {% else %}
+                                    Get started by tracking your first DevOps engineering project.
+                                {% endif %}
+                            </p>
+                            <a href="{{ url_for('add_project') }}" class="btn btn-primary" style="margin-top: 1rem;">+ Add New Project</a>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

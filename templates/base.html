@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DevOps Project Tracker{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <div class="container navbar-container">
+            <a href="{{ url_for('index') }}" class="brand">
+                <span class="brand-icon">&gt;_</span>
+                <span class="brand-title">DevOps <span>Tracker</span></span>
+            </a>
+            <nav class="nav-links">
+                <a href="{{ url_for('index') }}" class="nav-item {% if request.endpoint == 'index' %}active{% endif %}">Dashboard</a>
+                <a href="{{ url_for('add_project') }}" class="nav-item btn-primary-nav {% if request.endpoint == 'add_project' %}active{% endif %}">+ New Project</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Flash Messages -->
+    <div class="container message-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        <span class="alert-icon">
+                            {% if category == 'success' %}&#10004;{% elif category == 'danger' %}&#9888;{% else %}&#8505;{% endif %}
+                        </span>
+                        <span class="alert-text">{{ message }}</span>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="container main-content">
+        {% if error_title %}
+            <div class="card error-card">
+                <h2>{{ error_title }}</h2>
+                <p>{{ error_message }}</p>
+                <div style="margin-top: 1.5rem;">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">Return to Dashboard</a>
+                </div>
+            </div>
+        {% else %}
+            {% block content %}{% endblock %}
+        {% endif %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <p>DevOps Project Tracker &bull; Internal Engineering Operations Dashboard</p>
+            <p class="footer-meta">Flask &bull; MySQL &bull; Clean Architecture</p>
+        </div>
+    </footer>
+</body>
+</html>
