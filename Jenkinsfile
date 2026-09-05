@@ -1,13 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        label 'devops'
+    }
 
     stages {
-
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
 
         stage('Test') {
             steps {
