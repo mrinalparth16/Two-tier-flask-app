@@ -1,0 +1,57 @@
+services:
+
+  flask-app:
+    build: 
+      context: .
+    container_name: flask-cont
+    ports:
+      - "5000:5000"
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+        
+    networks:
+      - devops-tracker-network
+
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: devops_tracker
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      SECRET_KEY: local-development-secret
+      PORT: 5000
+
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-cont
+
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: devops_tracker
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    
+    networks:
+      - devops-tracker-network
+
+
+
+volumes:
+  mysql-data:
+
+networks:
+  devops-tracker-network:
+
+    
