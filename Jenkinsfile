@@ -30,6 +30,14 @@ pipeline {
             }
         }
 
+        stage('Trivy Scan') {
+            steps {
+                sh '''
+                    trivy image --severity CRITICAL devops-tracker:${GIT_COMMIT}
+                '''
+            }
+        }
+
         stage('Push Docker Image to ECR') {
             steps {
                 sh '''
