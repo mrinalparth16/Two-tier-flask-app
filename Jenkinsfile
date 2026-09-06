@@ -53,5 +53,19 @@ pipeline {
             }
         }
 
+        stage('Deploy') {
+            steps {
+                sh '''
+                    aws ecr get-login-password --region "$AWS_REGION" | \
+                    docker login --username AWS --password-stdin "$ECR_REGISTRY"
+
+                    export IMAGE_TAG=${GIT_COMMIT}
+
+                    docker compose pull
+                    docker compose up -d
+                '''
+            }
+        }
+
     }
 }
