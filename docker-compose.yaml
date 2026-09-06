@@ -1,8 +1,7 @@
 services:
 
   flask-app:
-    build: 
-      context: .
+    image: 870461445156.dkr.ecr.ap-south-1.amazonaws.com/devops-tracker:${IMAGE_TAG}
     container_name: flask-cont
     ports:
       - "5000:5000"
