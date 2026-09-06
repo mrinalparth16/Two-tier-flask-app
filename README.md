@@ -1,4 +1,5 @@
 # Two-Tier Flask DevOps Application
+This project demonstrates an end-to-end CI/CD workflow using GitHub, Jenkins, Docker, Amazon ECR, AWS EC2, and Trivy. It covers automated testing, container image building, security scanning, image publishing, deployment, and application health verification.
 
 A hands-on DevOps portfolio project demonstrating CI/CD for a containerized Flask + MySQL application using **GitHub, Jenkins, Docker, AWS EC2, Amazon ECR, Docker Compose, and Trivy**.
 
