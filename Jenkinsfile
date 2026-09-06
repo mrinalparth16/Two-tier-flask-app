@@ -16,10 +16,10 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
                 sh '''
-                    docker build -t devops-tracker:1.0 .
+                    docker build -t devops-tracker:${GIT_COMMIT} .
                 '''
             }
         }
