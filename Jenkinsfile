@@ -67,5 +67,31 @@ pipeline {
             }
         }
 
+        stage('Health Check') {
+            steps {
+                sh '''
+                    for i in 1 2 3 4 5; do
+                        if curl -f http://localhost:5000/health; then
+                            echo "Health check passed"
+                            exit 0
+                        else
+                            echo "Health check failed. Retrying in 5 seconds..."
+                            sleep 5
+                        fi
+                    done
+                    echo "Health check failed after 5 attempts. Exiting with error."
+                    exit 1
+                '''
+            }
+        }
+        stage('Clean Up') {
+            steps {
+                sh '''
+                    docker image prune -f
+                    docker builder prune -f
+                '''
+            }
+        }
+
     }
 }
