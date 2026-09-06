@@ -193,20 +193,31 @@ The project was validated end-to-end:
 - Full Jenkins pipeline completed successfully.
 - GitHub webhook was configured and connected for automatic triggering.
 
-## 📸 Portfolio Screenshots
+## 📸 Project Screenshots
 
-Recommended evidence:
+### 1. Jenkins CI/CD Pipeline
+![Jenkins CI/CD Pipeline](screenshots/01-jenkins-successful-pipeline.png)
 
-1. GitHub repository and commits
-2. Jenkins pipeline with all stages successful ⭐
-3. Jenkins Agent online ⭐
-4. Jenkins console output ⭐
-5. Amazon ECR image tagged with Git SHA ⭐
-6. Running Flask application ⭐
-7. `/health` response showing `healthy` and `connected` ⭐
-8. GitHub webhook successful delivery
+### 2. Amazon ECR
+![Amazon ECR](screenshots/02-amazon-ecr-image.png)
 
-Never include passwords, private keys, `.env` files, or other secrets in screenshots.
+### 3. Running Flask Application
+![Running Flask Application](screenshots/03-running-flask-application.png)
+
+### 4. Application Health Check
+![Application Health Check](screenshots/04-health-check.png)
+
+### 5. Jenkins Agent
+![Jenkins Agent](screenshots/05-jenkins-agent-online.png)
+
+### 6. Jenkins Test & Docker Build
+![Jenkins Test and Docker Build](screenshots/06-jenkins-console-test-build.png)
+
+### 7. Jenkins Deployment & Health Verification
+![Jenkins Deployment and Health Verification](screenshots/07-jenkins-console-health-cleanup.png)
+
+### 8. GitHub Webhook
+![GitHub Webhook](screenshots/08-github-webhook.png)
 
 ## 📚 Key Learnings
 
