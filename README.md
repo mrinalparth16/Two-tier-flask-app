@@ -1,6 +1,6 @@
 # Two-Tier Flask DevOps Application
 
-A hands-on DevOps portfolio project demonstrating CI/CD for a containerized Flask + MySQL application using **GitHub, Jenkins, Docker, AWS EC2, Amazon ECR, Docker Compose, and Trivy**.
+A hands-on DevOps project demonstrating CI/CD for a containerized Flask + MySQL application using **GitHub, Jenkins, Docker, AWS EC2, Amazon ECR, Docker Compose, and Trivy**.
 
 ## 🏗️ Architecture
 
